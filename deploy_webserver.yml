@@ -1,0 +1,27 @@
+- name: deploy Web Server on VM1 and VM2
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Install Apache (httpd) ## sudo yum install -y httpd
+      yum:
+        name: httpd
+        state: present
+        use_backend: yum 
+
+    - name: Start and Enable Apache 
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Deploy Web Page for VM1
+      copy:
+        content: "Hello World from SJSU-1"
+        dest: /var/www/html/index.html
+      when: "'vm1' in inventory_hostname"
+
+    - name: Deploy Web Page for VM2
+      copy:
+        content: "Hello World from SJSU-2"
+        dest: /var/www/html/index.html
+      when: "'vm2' in inventory_hostname"

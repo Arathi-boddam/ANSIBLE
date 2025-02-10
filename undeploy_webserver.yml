@@ -1,0 +1,19 @@
+---
+- name: Uninstall Web Server
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Stop Apache Service
+      service:
+        name: httpd
+        state: stopped
+
+    - name: Remove Apache Package
+      yum:
+        name: httpd
+        state: absent
+
+    - name: Remove Web Page
+      file:
+        path: /var/www/html/index.html
+        state: absent
